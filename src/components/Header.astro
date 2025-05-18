@@ -69,14 +69,32 @@ const activeRoute = routes[currentPath] || null;
     font-weight: inherit;
     margin: 0;
   }
-  /* YENİ EKLENEN KISIM */
-  h1 a { /* Veya daha spesifik olmak için h1 > a */
-    color: #08e8de; /* İstediğiniz rengi buraya yazın, örneğin kırmızı */
+
+  /* "müzikmatik" yazısı için gradient stilleri */
+  h1 a .oh__inner { /* TextSlider içindeki asıl metni hedefliyoruz */
+    background: linear-gradient(45deg, #00F2FE, #4FACFE, #00C9A7, #C8FC7E); /* Turkuaz, mavi, yeşil ve açık yeşil tonları */
+    /* Alternatif bir gradient:
+    background: linear-gradient(to right, #69EACB, #EACCF8, #6654F1); // Mint, lavanta, mor
+    */
+    /* Daha fütüristik bir gradient:
+    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(15,155,229,1) 35%, rgba(255,0,231,1) 100%); // Mavi, koyu mavi, pembe
+    */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent; /* Standart tarayıcılar için */
+    /* Animasyonun düzgün çalışması için TextSlider'ın kendi stilini bozmamak adına display: inline-block önemli */
+    display: inline-block; /* Bu zaten TextSlider'da var ama emin olmak için */
   }
-  h1 a:hover {
-    color: #CC0000; /* Hover rengini de ayarlayabilirsiniz */
+
+  /* Hover durumunda farklı bir efekt isterseniz (opsiyonel) */
+  h1 a:hover .oh__inner {
+    /* Örneğin hover'da gradient'i biraz değiştirebilir veya parlaklık ekleyebilirsiniz */
+    /* Veya basitçe opacity ile oynayabilirsiniz, ancak gradient ile bu çok iyi görünmeyebilir */
+    opacity: 0.85; /* Deneyebilirsiniz */
   }
-  /* YENİ EKLENEN KISIM SONU */
+  /* GRADIENT STİLLERİ SONU */
+
   ul {
     display: flex;
     list-style: none;
