@@ -9,7 +9,7 @@ const routes = {
   "/": "Home",
   "/uret/": "Üret",
   "/dinle/": "Dinle",
-  "/sosyal/": "Sosyal",
+  "/kapis/": "Kapış",
   "/ulas/": "Ulaş",
 };
 // Determine the active route
@@ -38,9 +38,9 @@ const activeRoute = routes[currentPath] || null;
     </li>
     <li>
       <a
-        href="/sosyal/"
-        class={activeRoute === "Sosyal" ? "current" : ""}
-        data-astro-prefetch><TextSlider content="Sosyal" /></a>
+        href="/kapis/"
+        class={activeRoute === "Kapış" ? "current" : ""}
+        data-astro-prefetch><TextSlider content="Kapış" /></a>
     </li>
     <li>
       <a
