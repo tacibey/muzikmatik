@@ -18,34 +18,33 @@ const activeRoute = routes[currentPath] || null;
 
 <header>
   <h1>
-    <a href="/" class={activeRoute === "Home" ? "current" : ""}
-      ><TextSlider content="müzikmatik" /></a>
-  </h1>
-  <span><TextSlider content="Yapay Zekâ Müzik Platformu" /></span>
+  <a href="/" class={activeRoute === "Home" ? "current" : ""}>müzikmatik</a>
+</h1>
+  <span>Yapay Zekâ Müzik Platformu</span>
   <ul>
     <li>
       <a
         href="/uret/"
         class={activeRoute === "Releases" ? "current" : ""}
-        data-astro-prefetch><TextSlider content="Üret" /></a>
+        data-astro-prefetch>Üret</a>
     </li>
     <li>
       <a
         href="/dinle/"
         class={activeRoute === "History" ? "current" : ""}
-        data-astro-prefetch><TextSlider content="Dinle" /></a>
+        data-astro-prefetch>Dinle</a>
     </li>
     <li>
       <a
         href="/sosyal/"
         class={activeRoute === "Store" ? "current" : ""}
-        data-astro-prefetch><TextSlider content="Sosyal" /></a>
+        data-astro-prefetch>Sosyal</a>
     </li>
     <li>
       <a
         href="/ulas/"
         class={activeRoute === "Contact" ? "current" : ""}
-        data-astro-prefetch><TextSlider content="Ulaş" /></a>
+        data-astro-prefetch>Ulaş</a>
     </li>
   </ul>
 </header>
