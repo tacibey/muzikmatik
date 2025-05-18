@@ -69,6 +69,14 @@ const activeRoute = routes[currentPath] || null;
     font-weight: inherit;
     margin: 0;
   }
+  /* YENİ EKLENEN KISIM */
+  h1 a { /* Veya daha spesifik olmak için h1 > a */
+    color: #08e8de; /* İstediğiniz rengi buraya yazın, örneğin kırmızı */
+  }
+  h1 a:hover {
+    color: #CC0000; /* Hover rengini de ayarlayabilirsiniz */
+  }
+  /* YENİ EKLENEN KISIM SONU */
   ul {
     display: flex;
     list-style: none;
