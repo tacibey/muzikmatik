@@ -1,12 +1,100 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const title = "Dinle";
+const title = "müzikmatik - Müzikleri Dinle";
+const description = "Yapay zeka ile üretilmiş en yeni şarkıları dinle.";
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={title} description={description}>
+  {/* APlayer CSS dosyasını CDN'den ekliyoruz */}
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  </Fragment>
+
   <div class="content content--page">
-    <h1>Dinle</h1>
-    <p>This is just an example page</p>
+    <h1>Müzikleri Dinle</h1>
+    <p>Yapay zeka tarafından sizin için üretilen eşsiz melodileri keşfedin.</p>
+
+    {/* APlayer için HTML container */}
+    <div id="aplayer-container">
+      <div id="aplayer"></div>
+    </div>
   </div>
+
+  {/* APlayer JavaScript dosyasını ve başlatma kodunu ekliyoruz */}
+  <script is:inline src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script is:inline>
+    // Sayfa yüklendikten sonra APlayer'ı başlat
+    document.addEventListener('astro:page-load', () => {
+      // Eğer daha önce bir APlayer instance'ı varsa onu temizleyelim (sayfa geçişlerinde önemli)
+      if (window.currentAPlayer) {
+        window.currentAPlayer.destroy();
+      }
+
+      // Örnek müzik listesi.
+      // Kendi müziklerinizi eklemek için aşağıdaki 'audio' dizisini düzenleyin.
+      // Müzik dosyalarınızı (url) ve kapak resimlerinizi (cover)
+      // projenizin `public` klasörüne göre ayarlamanız gerekecek.
+      // Örneğin, `public/muzikler/sarki1.mp3` için url: '/muzikler/sarki1.mp3'
+      const ap = new APlayer({
+        container: document.getElementById('aplayer'),
+        // mini: false, // Mini mod için true yapabilirsiniz
+        // autoplay: false, // Otomatik başlatma için true
+        // theme: '#FADFA3', // Tema rengi
+        // loop: 'all', // 'all', 'one', 'none'
+        // order: 'list', // 'list', 'random'
+        // preload: 'auto', // 'auto', 'metadata', 'none'
+        // volume: 0.7, // Varsayılan ses seviyesi
+        // mutex: true, // Sadece bir player'ın çalmasını sağlar
+        // listFolded: false, // Liste başlangıçta açık mı kapalı mı?
+        // listMaxHeight: 90, // Liste maksimum yüksekliği
+        // lrcType: 3, // Şarkı sözü formatı (eğer varsa)
+        audio: [
+          {
+            name: 'Örnek Şarkı 1',
+            artist: 'AI Sanatçısı Alfa',
+            url: '/muzikler/ornek_sarki_1.mp3', // public/muzikler/ornek_sarki_1.mp3 yolunda olmalı
+            cover: '/kapaklar/ornek_kapak_1.jpg', // public/kapaklar/ornek_kapak_1.jpg yolunda olmalı
+            // lrc: 'lrc1.lrc', // Şarkı sözü dosyası (opsiyonel)
+            // theme: '#ebd0c2' // Bu şarkıya özel tema rengi (opsiyonel)
+          },
+          {
+            name: 'Mistik Melodiler',
+            artist: 'AI Sanatçısı Beta',
+            url: '/muzikler/mistik_melodiler.mp3', // public/muzikler/mistik_melodiler.mp3
+            cover: '/kapaklar/mistik_kapak.png' // public/kapaklar/mistik_kapak.png
+          },
+          // Buraya daha fazla şarkı ekleyebilirsiniz
+          // {
+          //   name: 'Şarkı Adı',
+          //   artist: 'Sanatçı Adı',
+          //   url: '/path/to/your/song.mp3',
+          //   cover: '/path/to/your/cover.jpg'
+          // }
+        ]
+      });
+      window.currentAPlayer = ap; // Mevcut instance'ı sakla
+    });
+  </script>
 </BaseLayout>
+
+<style>
+  /* APlayer container'ı için ek stiller (opsiyonel) */
+  #aplayer-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    max-width: 700px; /* Player'ın maksimum genişliği */
+    margin-left: auto;
+    margin-right: auto;
+    /* APlayer'ın kendi stilleri zaten CDN'den geliyor */
+  }
+
+  .content--page h1 {
+    margin-bottom: 0.5rem;
+  }
+  .content--page p {
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    color: var(--color-text-alt);
+  }
+</style>
