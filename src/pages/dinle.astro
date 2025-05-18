@@ -3,295 +3,98 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const title = "müzikmatik - Müzikleri Dinle";
 const description = "Yapay zeka ile üretilmiş en yeni müzikleri buradan dinleyebilirsiniz.";
-
-// Çalınacak şarkıların listesi
-const songs = [
-  {
-    id: 'sarki1', // Her şarkı için benzersiz bir ID
-    name: 'Geleceğin Ritmi',
-    artist: 'AI Besteci X',
-    url: '/muzikler/ornek_sarki_1.mp3', // public/muzikler/ornek_sarki_1.mp3
-    cover: '/kapaklar/ornek_kapak.webp', // public/kapaklar/ornek_kapak.webp
-  },
-  {
-    id: 'sarki2',
-    name: 'Dijital Serenad',
-    artist: 'Algoritmik Virtüöz',
-    url: '/muzikler/mistik_melodiler.mp3', // public/muzikler/mistik_melodiler.mp3
-    cover: '/kapaklar/mistik_melodiler.avif', // public/kapaklar/mistik_melodiler.avif
-  },
-  // Buraya daha fazla şarkı ekleyebilirsiniz
-];
 ---
 
 <BaseLayout title={title} description={description}>
-  {/* Green Audio Player CSS dosyasını CDN'den ekliyoruz */}
+  {/* APlayer CSS dosyasını CDN'den ekliyoruz */}
   <Fragment slot="head">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/greghub/green-audio-player/dist/css/green-audio-player.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
   </Fragment>
 
   <div class="content content--page">
     <h1>Müzikleri Dinle</h1>
     <p>Yapay zeka tarafından sizin için üretilen eşsiz melodileri keşfedin.</p>
 
-    <div class="gap-player-wrapper">
-      {/* Player'ın kendisi için alan */}
-      <div class="current-track-info">
-        <img id="current-cover" src={songs[0].cover} alt="Şu an çalan şarkı kapağı" />
-        <div class="text-info">
-          <h2 id="current-name">{songs[0].name}</h2>
-          <p id="current-artist">{songs[0].artist}</p>
-        </div>
-      </div>
-      <div class="audio-player-container">
-        {/* Green Audio Player bu audio elementini kullanacak */}
-        <audio id="main-audio-player" crossOrigin="anonymous">
-          <source src={songs[0].url} type="audio/mpeg" />
-          Tarayıcınız audio elementini desteklemiyor.
-        </audio>
-      </div>
-
-      {/* Şarkı Listesi */}
-      <h3 class="playlist-title">Çalma Listesi</h3>
-      <ul class="song-playlist">
-        {songs.map((song, index) => (
-          <li class="playlist-item" data-song-index={index}>
-            <img src={song.cover} alt="" class="playlist-cover" />
-            <div class="playlist-info">
-              <span class="playlist-name">{song.name}</span>
-              <span class="playlist-artist">{song.artist}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
+    {/* APlayer için HTML container */}
+    <div id="aplayer-container">
+      <div id="aplayer"></div>
     </div>
   </div>
 
-  {/* Green Audio Player JavaScript dosyasını ve başlatma kodunu ekliyoruz */}
-  <script is:inline src="https://cdn.jsdelivr.net/gh/greghub/green-audio-player/dist/js/green-audio-player.min.js"></script>
-  <script define:vars={{ songsData: songs }} is:inline>
+  {/* APlayer JavaScript dosyasını ve başlatma kodunu ekliyoruz */}
+  <script is:inline src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script is:inline>
+    // Sayfa yüklendikten sonra APlayer'ı başlat
     document.addEventListener('astro:page-load', () => {
-      if (window.greenAudioPlayerInstance) {
-        // GAP'ın resmi bir destroy metodu yok gibi görünüyor.
-        // Bu nedenle player'ı manuel olarak DOM'dan kaldırıp yeniden oluşturmak gerekebilir.
-        // Şimdilik, basitçe yeniden başlatıyoruz, bu bazı durumlarda sorun yaratabilir.
-        // Daha iyi bir temizleme için player'ın container'ını boşaltıp yeniden oluşturmak gerekebilir.
+      // Eğer daha önce bir APlayer instance'ı varsa onu temizleyelim (sayfa geçişlerinde önemli)
+      if (window.currentAPlayer) {
+        window.currentAPlayer.destroy();
       }
 
-      // GreenAudioPlayer'ı başlat
-      // GAP, sayfadaki tüm <audio> elementlerini otomatik olarak hedefler veya class ile seçilebilir.
-      // Biz spesifik bir ID ile hedefleyeceğiz.
-      // Ancak GAP'in bu şekilde tek instance yönetimi biraz dolaylı olabilir.
-      // Onun yerine, audio elementini direkt veriyoruz.
-      try {
-        window.greenAudioPlayerInstance = new GreenAudioPlayer(document.getElementById('main-audio-player'), {
-          // enableKeystrokes: true, // Klavye kısayolları
-          // showTooltips: true,    // İpuçları
-          // showDownloadButton: false, // İndirme butonu
-          // outlineControls: false,
-          // stopOthersOnPlay: true // Diğer GAP playerları durdur (sayfada birden fazla varsa)
-        });
-      } catch (e) {
-        console.error("GreenAudioPlayer başlatılamadı:", e);
-        // Eğer hata olursa, standart audio kontrolleri görünür kalır.
-        const fallbackAudio = document.getElementById('main-audio-player');
-        if (fallbackAudio && !fallbackAudio.hasAttribute('controls')) {
-            fallbackAudio.setAttribute('controls', 'controls');
-        }
-      }
-
-
-      const audioEl = document.getElementById('main-audio-player');
-      const currentCoverEl = document.getElementById('current-cover');
-      const currentNameEl = document.getElementById('current-name');
-      const currentArtistEl = document.getElementById('current-artist');
-      const playlistItems = document.querySelectorAll('.playlist-item');
-
-      playlistItems.forEach(item => {
-        item.addEventListener('click', function() {
-          const songIndex = parseInt(this.dataset.songIndex);
-          const selectedSong = songsData[songIndex];
-
-          // Player'ın kaynağını değiştir
-          // GAP'ta doğrudan kaynak değiştirme API'si yoksa, audio elementini manuel güncelleriz.
-          audioEl.src = selectedSong.url;
-          // Yeni kaynak yüklendikten sonra oynat
-          // GAP'ın play metodunu çağırmak gerekebilir veya audioEl.play()
-          // GAP'ın kendisi DOM değişikliklerini izleyip güncelleniyorsa bu yeterli olabilir.
-
-          // Şarkı bilgilerini güncelle
-          currentCoverEl.src = selectedSong.cover;
-          currentNameEl.textContent = selectedSong.name;
-          currentArtistEl.textContent = selectedSong.artist;
-          
-          // Aktif şarkıyı işaretle (opsiyonel)
-          playlistItems.forEach(i => i.classList.remove('active-song'));
-          this.classList.add('active-song');
-
-          // Müziği oynat (GAP'ın yeniden başlatılması veya play komutu gerekebilir)
-          // Eğer GAP instance'ı varsa ve play metodu destekliyorsa:
-          if (window.greenAudioPlayerInstance && typeof window.greenAudioPlayerInstance.play === 'function') {
-             // GAP'ın mevcut şarkıyı algılaması için biraz bekleme gerekebilir
-             // veya audio elementini yeniden yüklemesi için bir yöntem varsa o kullanılmalı.
-             // Şimdilik, doğrudan audio elementini oynatmayı deneyelim.
-             audioEl.play();
-          } else if (audioEl) {
-            audioEl.play();
-          }
-        });
+      // Örnek müzik listesi.
+      // Kendi müziklerinizi eklemek için aşağıdaki 'audio' dizisini düzenleyin.
+      // Müzik dosyalarınızı (url) ve kapak resimlerinizi (cover)
+      // projenizin `public` klasörüne göre ayarlamanız gerekecek.
+      // Örneğin, `public/muzikler/sarki1.mp3` için url: '/muzikler/sarki1.mp3'
+      const ap = new APlayer({
+        container: document.getElementById('aplayer'),
+        // mini: false, // Mini mod için true yapabilirsiniz
+        // autoplay: false, // Otomatik başlatma için true
+        // theme: '#FADFA3', // Tema rengi
+        // loop: 'all', // 'all', 'one', 'none'
+        // order: 'list', // 'list', 'random'
+        // preload: 'auto', // 'auto', 'metadata', 'none'
+        // volume: 0.7, // Varsayılan ses seviyesi
+        // mutex: true, // Sadece bir player'ın çalmasını sağlar
+        // listFolded: false, // Liste başlangıçta açık mı kapalı mı?
+        // listMaxHeight: 90, // Liste maksimum yüksekliği
+        // lrcType: 3, // Şarkı sözü formatı (eğer varsa)
+        audio: [
+          {
+            name: 'Örnek Şarkı 1',
+            artist: 'AI Sanatçısı Alfa',
+            url: '/muzikler/ornek_sarki_1.mp3', // public/muzikler/ornek_sarki_1.mp3 yolunda olmalı
+            cover: '/kapaklar/ornek_kapak_1.jpg', // public/kapaklar/ornek_kapak.webp yolunda olmalı
+            // lrc: 'lrc1.lrc', // Şarkı sözü dosyası (opsiyonel)
+            // theme: '#ebd0c2' // Bu şarkıya özel tema rengi (opsiyonel)
+          },
+          {
+            name: 'Mistik Melodiler',
+            artist: 'AI Sanatçısı Beta',
+            url: '/muzikler/mistik_melodiler.mp3', // public/muzikler/mistik_melodiler.mp3
+            cover: '/kapaklar/mistik_kapak.png' // public/kapaklar/mistik_melodiler.avif
+          },
+          // Buraya daha fazla şarkı ekleyebilirsiniz
+          // {
+          //   name: 'Şarkı Adı',
+          //   artist: 'Sanatçı Adı',
+          //   url: '/path/to/your/song.mp3',
+          //   cover: '/path/to/your/cover.jpg'
+          // }
+        ]
       });
-
-      // İlk şarkıyı aktif olarak işaretle
-      if (playlistItems.length > 0) {
-        playlistItems[0].classList.add('active-song');
-      }
-
+      window.currentAPlayer = ap; // Mevcut instance'ı sakla
     });
   </script>
 </BaseLayout>
 
 <style>
+  /* APlayer container'ı için ek stiller (opsiyonel) */
+  #aplayer-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    max-width: 700px; /* Player'ın maksimum genişliği */
+    margin-left: auto;
+    margin-right: auto;
+    /* APlayer'ın kendi stilleri zaten CDN'den geliyor */
+  }
+
   .content--page h1 {
     margin-bottom: 0.5rem;
   }
-  .content--page > p {
-    margin-bottom: 1.5rem;
+  .content--page p {
+    margin-bottom: 2rem;
     font-size: 1.1rem;
     color: var(--color-text-alt);
   }
-
-  .gap-player-wrapper {
-    max-width: 750px;
-    margin: 1rem auto 2rem auto;
-    padding: 20px;
-    background-color: var(--color-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-  }
-
-  .current-track-info {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .current-track-info img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-right: 20px;
-    border: 1px solid var(--border-color);
-  }
-
-  .current-track-info .text-info h2 {
-    font-size: 1.8rem;
-    margin: 0 0 8px 0;
-    color: var(--color-text);
-    line-height: 1.2;
-  }
-
-  .current-track-info .text-info p {
-    font-size: 1.1rem;
-    color: var(--color-text-alt);
-    margin: 0;
-  }
-
-  .audio-player-container {
-    margin-bottom: 25px;
-  }
-  /* GreenAudioPlayer'ın kendi stilleri uygulanacak.
-     Gerekirse burada override edebilirsiniz.
-     Örn: .green-audio-player { ... }
-  */
-  .green-audio-player {
-    /* Varsayılan GAP stilleri genellikle iyidir, ama gerekirse: */
-    /* box-shadow: none; */
-    /* background-color: transparent; */
-  }
-  .green-audio-player .slider-container .progress {
-    background-color: var(--color-link-hover); /* Temanızla uyumlu bir renk */
-  }
-  .green-audio-player .play-pause-btn svg {
-    fill: var(--color-link); /* Temanızla uyumlu bir renk */
-  }
-
-
-  .playlist-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--color-text);
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .song-playlist {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 400px; /* Liste çok uzarsa scroll olur */
-    overflow-y: auto;
-  }
-
-  .playlist-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    border-bottom: 1px solid #eee; /* var(--border-color) ile de değiştirilebilir */
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  .playlist-item:last-child {
-    border-bottom: none;
-  }
-
-  .playlist-item:hover {
-    background-color: #f9f9f9; /* var(--color-placeholder) ile de değiştirilebilir */
-  }
-  
-  .playlist-item.active-song {
-    background-color: #eef6ff; /* Aktif şarkı için farklı bir arka plan */
-    /* border-left: 3px solid var(--color-link); */ /* Aktifliği göstermek için sol kenarlık */
-  }
-  .playlist-item.active-song .playlist-name {
-    font-weight: 700;
-    color: var(--color-link);
-  }
-
-  .playlist-cover {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-right: 15px;
-  }
-
-  .playlist-info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .playlist-name {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--color-text);
-    margin-bottom: 3px;
-  }
-
-  .playlist-artist {
-    font-size: 0.85rem;
-    color: var(--color-text-alt);
-  }
-
-  /* GreenAudioPlayer'ı <audio> etiketini gizleyecek şekilde ayarlayabiliriz */
-  /* Eğer GAP başlatılamazsa, audio etiketi controls ile görünür kalır. */
-  /* Ancak GAP başarılı bir şekilde başlatılırsa, audio etiketini gizleyebilir. */
-  /* Bu genellikle GAP tarafından otomatik yapılır. */
-
 </style>
