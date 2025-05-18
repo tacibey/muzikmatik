@@ -18,33 +18,35 @@ const activeRoute = routes[currentPath] || null;
 
 <header>
   <h1>
-  <a href="/" class={activeRoute === "Home" ? "current" : ""}>müzikmatik</a>
-</h1>
-  <span>Yapay Zekâ Müzik Platformu</span>
+    <a href="/" class={activeRoute === "Home" ? "current" : ""}>
+      <TextSlider content="müzikmatik" />
+    </a>
+  </h1>
+  <span><TextSlider content="Yapay Zekâ Müzik Platformu" /></span>
   <ul>
     <li>
       <a
         href="/uret/"
-        class={activeRoute === "Releases" ? "current" : ""}
-        data-astro-prefetch>Üret</a>
+        class={activeRoute === "Üret" ? "current" : ""}
+        data-astro-prefetch><TextSlider content="Üret" /></a>
     </li>
     <li>
       <a
         href="/dinle/"
-        class={activeRoute === "History" ? "current" : ""}
-        data-astro-prefetch>Dinle</a>
+        class={activeRoute === "Dinle" ? "current" : ""}
+        data-astro-prefetch><TextSlider content="Dinle" /></a>
     </li>
     <li>
       <a
         href="/sosyal/"
-        class={activeRoute === "Store" ? "current" : ""}
-        data-astro-prefetch>Sosyal</a>
+        class={activeRoute === "Sosyal" ? "current" : ""}
+        data-astro-prefetch><TextSlider content="Sosyal" /></a>
     </li>
     <li>
       <a
         href="/ulas/"
-        class={activeRoute === "Contact" ? "current" : ""}
-        data-astro-prefetch>Ulaş</a>
+        class={activeRoute === "Ulaş" ? "current" : ""}
+        data-astro-prefetch><TextSlider content="Ulaş" /></a>
     </li>
   </ul>
 </header>
