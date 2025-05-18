@@ -7,10 +7,10 @@ const currentPath = Astro.url.pathname;
 // Define a map of routes
 const routes = {
   "/": "Home",
-  "/releases/": "Releases",
-  "/store/": "Store",
-  "/history/": "History",
-  "/contact/": "Contact",
+  "/uret/": "Üret",
+  "/dinle/": "Dinle",
+  "/sosyal/": "Sosyal",
+  "/ulas/": "Ulaş",
 };
 // Determine the active route
 const activeRoute = routes[currentPath] || null;
@@ -19,33 +19,33 @@ const activeRoute = routes[currentPath] || null;
 <header>
   <h1>
     <a href="/" class={activeRoute === "Home" ? "current" : ""}
-      ><TextSlider content="Players Club" /></a>
+      ><TextSlider content="müzikmatik" /></a>
   </h1>
-  <span><TextSlider content="Record Label" /></span>
+  <span><TextSlider content="Yapay Zekâ Müzik Platformu" /></span>
   <ul>
     <li>
       <a
-        href="/releases/"
+        href="/uret/"
         class={activeRoute === "Releases" ? "current" : ""}
-        data-astro-prefetch><TextSlider content="Releases" /></a>
+        data-astro-prefetch><TextSlider content="Üret" /></a>
     </li>
     <li>
       <a
-        href="/history/"
+        href="/dinle/"
         class={activeRoute === "History" ? "current" : ""}
-        data-astro-prefetch><TextSlider content="History" /></a>
+        data-astro-prefetch><TextSlider content="Dinle" /></a>
     </li>
     <li>
       <a
-        href="/store/"
+        href="/sosyal/"
         class={activeRoute === "Store" ? "current" : ""}
-        data-astro-prefetch><TextSlider content="Store" /></a>
+        data-astro-prefetch><TextSlider content="Sosyal" /></a>
     </li>
     <li>
       <a
-        href="/contact/"
+        href="/ulas/"
         class={activeRoute === "Contact" ? "current" : ""}
-        data-astro-prefetch><TextSlider content="Contact" /></a>
+        data-astro-prefetch><TextSlider content="Ulaş" /></a>
     </li>
   </ul>
 </header>
