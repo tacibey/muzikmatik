@@ -7,7 +7,7 @@ import Preloader from "../components/Preloader.astro";
 
 const allArtists = await getCollection("artists");
 const artistsTotal = allArtists.length;
-const title = "müzikmatik: yapay zekâ müzik platformu";
+const title = "müzikmatik - Yapay Zeka Müzik Platformu";
 ---
 
 <BaseLayout title={title}>
@@ -16,7 +16,45 @@ const title = "müzikmatik: yapay zekâ müzik platformu";
     If you don’t want to use the preloader (e.g., for faster page load times or if you don’t require preloading images), you can safely remove the <Preloader /> component from this layout.
   -->
   <Preloader />
+
+  {/* YENİ EKLENEN GİRİŞ BÖLÜMÜ BAŞLANGICI */}
+  <section class="intro-section">
+    <h2 class="intro-slogan">Tek tıkla şarkını üret, tek tıkla yayınla!</h2>
+    <p class="intro-description">
+      müzikmatik'le sözleri yaz, tarzını belirle; şarkını spotify ve youtube music gibi 100'den fazla platformda yayınla! Üstelik dinlenme kazancının %80'i hesabında!
+    </p>
+  </section>
+  {/* YENİ EKLENEN GİRİŞ BÖLÜMÜ SONU */}
+
   <ArtistGridHeader artistsTotal={artistsTotal} />
   <ArtistGrid artists={allArtists} />
 </BaseLayout>
+
+<style>
+  /* Yeni bölüm için stiller */
+  .intro-section {
+    text-align: center; /* Metinleri ortala */
+    padding: 3rem 1rem; /* Üstten ve alttan boşluk, yanlardan biraz */
+    margin-bottom: 2rem; /* Altındaki grid header ile arasına boşluk */
+    border-bottom: 1px solid var(--border-color); /* Header'daki gibi bir ayırıcı */
+  }
+
+  .intro-slogan {
+    font-size: var(--font-size-xl); /* Temanın büyük başlık boyutu */
+    font-weight: 700; /* Kalın */
+    color: var(--color-text); /* Temanın ana metin rengi */
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .intro-description {
+    font-size: 1.1rem; /* Biraz daha büyük bir paragraf metni */
+    color: var(--color-text-alt); /* Temanın alternatif metin rengi */
+    line-height: 1.6;
+    max-width: 700px; /* Çok geniş olmasını engellemek için */
+    margin-left: auto;
+    margin-right: auto; /* Paragrafı kendi içinde ortalamak için */
+  }
+</style>
+
 <script src="../scripts/index.js"></script>
